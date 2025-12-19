@@ -80,22 +80,22 @@ export default function DashboardPage() {
   // Transform data for charts
   const mealPlanData = Object.entries(metrics.mealPlanDistribution).map(([name, value]) => ({
     name,
-    value,
+    value: value as number,
   }));
 
   const housingData = Object.entries(metrics.housingDistribution).map(([name, value]) => ({
     name,
-    value,
+    value: value as number,
   }));
 
   const genderData = Object.entries(metrics.genderDistribution).map(([name, value]) => ({
     name,
-    value,
+    value: value as number,
   }));
 
   const raceData = Object.entries(metrics.raceDistribution).map(([name, value]) => ({
     name,
-    value,
+    value: value as number,
   }));
 
   const dayOfWeekData = Object.entries(usagePatterns.byDayOfWeek)
