@@ -14,6 +14,13 @@
       "static/chunks/main-app-d373075b3e383a6f.js",
       "static/chunks/app/api/auth/check/route-41ca8453c1087572.js"
     ],
+    "/api/auth/login/route": [
+      "static/chunks/webpack-43160e344be9ded0.js",
+      "static/chunks/4bd1b696-9911af18dede28aa.js",
+      "static/chunks/964-86ef9b0ff671380e.js",
+      "static/chunks/main-app-d373075b3e383a6f.js",
+      "static/chunks/app/api/auth/login/route-41ca8453c1087572.js"
+    ],
     "/api/auth/logout/route": [
       "static/chunks/webpack-43160e344be9ded0.js",
       "static/chunks/4bd1b696-9911af18dede28aa.js",
@@ -28,13 +35,6 @@
       "static/chunks/main-app-d373075b3e383a6f.js",
       "static/css/862e2b9632cc875b.css",
       "static/chunks/app/layout-9b2212500eed7fc3.js"
-    ],
-    "/api/auth/login/route": [
-      "static/chunks/webpack-43160e344be9ded0.js",
-      "static/chunks/4bd1b696-9911af18dede28aa.js",
-      "static/chunks/964-86ef9b0ff671380e.js",
-      "static/chunks/main-app-d373075b3e383a6f.js",
-      "static/chunks/app/api/auth/login/route-41ca8453c1087572.js"
     ],
     "/api/crosstab/route": [
       "static/chunks/webpack-43160e344be9ded0.js",

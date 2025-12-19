@@ -21,6 +21,13 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const session = await getIronSession<SessionData>(request, response, sessionOptions);
 
+  console.log('Middleware check:', {
+    pathname,
+    isAuthenticated: session.isAuthenticated,
+    loginTime: session.loginTime,
+    cookies: request.cookies.getAll().map(c => c.name)
+  });
+
   if (!session.isAuthenticated) {
     return NextResponse.redirect(new URL('/login', request.url));
   }

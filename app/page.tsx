@@ -48,7 +48,9 @@ export default function DashboardPage() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/dashboard?cohortField=${cohortField}`);
+      const response = await fetch(`/api/dashboard?cohortField=${cohortField}`, {
+        credentials: 'include',
+      });
       if (!response.ok) throw new Error('Failed to fetch dashboard data');
       const result = await response.json();
       setData(result);
@@ -62,7 +64,9 @@ export default function DashboardPage() {
 
   const fetchCrosstabData = async () => {
     try {
-      const response = await fetch(`/api/crosstab?dimension1=${dimension1}&dimension2=${dimension2}`);
+      const response = await fetch(`/api/crosstab?dimension1=${dimension1}&dimension2=${dimension2}`, {
+        credentials: 'include',
+      });
       if (!response.ok) throw new Error('Failed to fetch crosstab data');
       const result = await response.json();
       setCrosstabData(result);
