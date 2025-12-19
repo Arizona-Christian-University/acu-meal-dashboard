@@ -3,6 +3,7 @@ import { loadAllData } from '@/lib/dataLoader';
 import { getCrosstabAnalysis } from '@/lib/analytics';
 import type { StudentMember } from '@/lib/types';
 
+export const runtime = 'edge';
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
