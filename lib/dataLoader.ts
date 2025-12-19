@@ -16,7 +16,7 @@ export async function loadStudentMembers(): Promise<StudentMember[]> {
       complete: (results) => {
         resolve(results.data);
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(error);
       },
     });
@@ -43,7 +43,7 @@ export async function loadMealTransactions(): Promise<Transaction[]> {
         complete: (results) => {
           resolve(results.data);
         },
-        error: (error) => {
+        error: (error: Error) => {
           reject(error);
         },
       });
@@ -69,7 +69,7 @@ export async function loadFlexDollarsTransactions(): Promise<Transaction[]> {
       complete: (results) => {
         resolve(results.data);
       },
-      error: (error) => {
+      error: (error: Error) => {
         reject(error);
       },
     });
