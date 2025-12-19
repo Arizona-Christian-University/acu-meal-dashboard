@@ -49,7 +49,7 @@ Login with the password you set in `DASHBOARD_PASSWORD`.
 npm run dev
 
 # Visit http://localhost:3001/login
-# Default password: ACU2025Dashboard! (from .env.local)
+# Password: (set DASHBOARD_PASSWORD in .env.local)
 ```
 
 ## Update Data
@@ -84,7 +84,7 @@ wrangler pages secret put DASHBOARD_PASSWORD
 
 ---
 
-**Default Login Credentials for Local Testing:**
-- Password: `ACU2025Dashboard!` (change in `.env.local`)
+**Login Credentials for Local Testing:**
+- Password: (set `DASHBOARD_PASSWORD` in `.env.local`)
 
 **Remember:** Change both `DASHBOARD_PASSWORD` and `SESSION_SECRET` to secure values before deploying to production!

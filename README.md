@@ -72,7 +72,7 @@ npm run dev
 Open [http://localhost:3001](http://localhost:3001) in your browser. You'll be redirected to the login page.
 
 **Default Login for Local Development:**
-- Password: `ACU2025Dashboard!` (or whatever you set in `.env.local`)
+- Password: (whatever you set in `DASHBOARD_PASSWORD` in `.env.local`)
 
 Production build:
 ```bash
