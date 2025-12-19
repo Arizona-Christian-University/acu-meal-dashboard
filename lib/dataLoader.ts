@@ -1,35 +1,16 @@
 import Papa from 'papaparse';
 import { StudentMember, Transaction } from './types';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-
-// For Cloudflare Workers compatibility
-async function readCSVFile(filename: string): Promise<string> {
-  // In Cloudflare Workers, files are bundled relative to the worker root
-  // In development, they're in the Data folder from cwd
-  const paths = [
-    join(process.cwd(), 'Data', filename),           // Development
-    join('Data', filename),                           // Cloudflare Workers (relative to bundle)
-    join('/var/task', 'Data', filename),             // Alternative Workers path
-  ];
-
-  for (const filePath of paths) {
-    try {
-      return await readFile(filePath, 'utf-8');
-    } catch (error) {
-      // Try next path
-      continue;
-    }
-  }
-
-  throw new Error(`Could not find CSV file: ${filename}`);
-}
+import {
+  Atrium_Members_Students,
+  Atrium_Transactions_Student_Meals_Fall_2025_7_Meals,
+  Atrium_Transactions_Student_Meals_Fall_2025_14_Meals,
+  Atrium_Transactions_Student_Meals_Fall_2025_19_Meals,
+  Atrium_Transactions_Student_Flex_Dollars_Fall_2025_Student_Flex_Dollars_1_,
+} from './data';
 
 export async function loadStudentMembers(): Promise<StudentMember[]> {
-  const fileContent = await readCSVFile('Atrium Members - Students.csv');
-
   return new Promise((resolve, reject) => {
-    Papa.parse<StudentMember>(fileContent, {
+    Papa.parse<StudentMember>(Atrium_Members_Students, {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {
@@ -43,19 +24,17 @@ export async function loadStudentMembers(): Promise<StudentMember[]> {
 }
 
 export async function loadMealTransactions(): Promise<Transaction[]> {
-  const files = [
-    'Atrium Transactions - Student Meals - Fall 2025 - 7 Meals.csv',
-    'Atrium Transactions - Student Meals - Fall 2025 - 14 Meals.csv',
-    'Atrium Transactions - Student Meals - Fall 2025 - 19 Meals.csv',
+  const csvData = [
+    Atrium_Transactions_Student_Meals_Fall_2025_7_Meals,
+    Atrium_Transactions_Student_Meals_Fall_2025_14_Meals,
+    Atrium_Transactions_Student_Meals_Fall_2025_19_Meals,
   ];
 
   const allTransactions: Transaction[] = [];
 
-  for (const file of files) {
-    const fileContent = await readCSVFile(file);
-
+  for (const csvContent of csvData) {
     const transactions = await new Promise<Transaction[]>((resolve, reject) => {
-      Papa.parse<Transaction>(fileContent, {
+      Papa.parse<Transaction>(csvContent, {
         header: true,
         skipEmptyLines: true,
         complete: (results) => {
@@ -74,12 +53,8 @@ export async function loadMealTransactions(): Promise<Transaction[]> {
 }
 
 export async function loadFlexDollarsTransactions(): Promise<Transaction[]> {
-  const fileContent = await readCSVFile(
-    'Atrium Transactions - Student Flex Dollars - Fall 2025 - Student Flex Dollars (1).csv'
-  );
-
   return new Promise((resolve, reject) => {
-    Papa.parse<Transaction>(fileContent, {
+    Papa.parse<Transaction>(Atrium_Transactions_Student_Flex_Dollars_Fall_2025_Student_Flex_Dollars_1_, {
       header: true,
       skipEmptyLines: true,
       complete: (results) => {

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "prebuild": "node scripts/bundle-csv-data.js",
+    "dev": "npm run prebuild && next dev",
     "build": "next build",
     "build:worker": "npx @opennextjs/cloudflare build",
     "start": "next start",
