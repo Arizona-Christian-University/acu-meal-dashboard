@@ -186,60 +186,80 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
           </div>
         ) : (
-          <div>
-            <p className="text-sm text-blue-600 mb-2">DEBUG: Rendering chart with {chartData?.length} data points</p>
+          <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
+            <p className="text-sm text-blue-600 mb-4">DEBUG: Rendering {period} chart with {chartData?.length} data points</p>
+
+            {/* Test with hardcoded simple data */}
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold mb-2">TEST CHART (hardcoded data):</h4>
+              <ResponsiveContainer width="100%" height={200}>
+                <RechartsBar data={[
+                  { name: 'A', value: 100 },
+                  { name: 'B', value: 200 },
+                  { name: 'C', value: 150 }
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#FF0000" />
+                </RechartsBar>
+              </ResponsiveContainer>
+            </div>
+
+            <h4 className="text-sm font-semibold mb-2">ACTUAL CHART (your data):</h4>
             <ResponsiveContainer width="100%" height={400}>
               {chartType === 'bar' ? (
-                <RechartsBar data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
+                <RechartsBar data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
+                  tick={{ fontSize: 12 }}
                   angle={-45}
                   textAnchor="end"
-                  height={100}
-                  interval={0}
+                  height={80}
                 />
-                <YAxis width={80} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />
-                <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                <Legend />
                 {metric === 'totals' ? (
                   <>
-                    <Bar dataKey="Meal Swipes" fill="#FF0000" stroke="#000" strokeWidth={2} />
-                    <Bar dataKey="Flex Dollars" fill="#00FF00" stroke="#000" strokeWidth={2} />
-                    <Bar dataKey="Total Transactions" fill="#0000FF" stroke="#000" strokeWidth={2} />
-                    <Bar dataKey="Active Students" fill="#FFFF00" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Meal Swipes" fill="#FF0000" />
+                    <Bar dataKey="Flex Dollars" fill="#00FF00" />
+                    <Bar dataKey="Total Transactions" fill="#0000FF" />
+                    <Bar dataKey="Active Students" fill="#FFFF00" />
                   </>
                 ) : (
                   <>
-                    <Bar dataKey="Avg Meals/Student" fill="#FF0000" stroke="#000" strokeWidth={2} />
-                    <Bar dataKey="Avg Flex/Student" fill="#00FF00" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Avg Meals/Student" fill="#FF0000" />
+                    <Bar dataKey="Avg Flex/Student" fill="#00FF00" />
                   </>
                 )}
               </RechartsBar>
             ) : (
-              <RechartsLine data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
+              <RechartsLine data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
+                  tick={{ fontSize: 12 }}
                   angle={-45}
                   textAnchor="end"
-                  height={100}
-                  interval={0}
+                  height={80}
                 />
-                <YAxis width={80} />
+                <YAxis tick={{ fontSize: 12 }} />
                 <Tooltip />
-                <Legend wrapperStyle={{ paddingTop: '20px' }} />
+                <Legend />
                 {metric === 'totals' ? (
                   <>
-                    <Line type="monotone" dataKey="Meal Swipes" stroke="#FF0000" strokeWidth={4} dot={{ r: 6 }} />
-                    <Line type="monotone" dataKey="Flex Dollars" stroke="#00FF00" strokeWidth={4} dot={{ r: 6 }} />
-                    <Line type="monotone" dataKey="Total Transactions" stroke="#0000FF" strokeWidth={4} dot={{ r: 6 }} />
-                    <Line type="monotone" dataKey="Active Students" stroke="#FFFF00" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Meal Swipes" stroke="#FF0000" strokeWidth={3} />
+                    <Line type="monotone" dataKey="Flex Dollars" stroke="#00FF00" strokeWidth={3} />
+                    <Line type="monotone" dataKey="Total Transactions" stroke="#0000FF" strokeWidth={3} />
+                    <Line type="monotone" dataKey="Active Students" stroke="#FFFF00" strokeWidth={3} />
                   </>
                 ) : (
                   <>
-                    <Line type="monotone" dataKey="Avg Meals/Student" stroke="#FF0000" strokeWidth={4} dot={{ r: 6 }} />
-                    <Line type="monotone" dataKey="Avg Flex/Student" stroke="#00FF00" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Avg Meals/Student" stroke="#FF0000" strokeWidth={3} />
+                    <Line type="monotone" dataKey="Avg Flex/Student" stroke="#00FF00" strokeWidth={3} />
                   </>
                 )}
               </RechartsLine>
