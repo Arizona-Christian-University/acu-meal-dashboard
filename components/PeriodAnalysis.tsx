@@ -186,11 +186,12 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
           </div>
         ) : (
-          <div className="w-full border-2 border-red-500" style={{ height: '400px', minHeight: '400px' }}>
+          <div className="w-full border-2 border-red-500" style={{ height: '500px', minHeight: '500px' }}>
             <p className="text-sm text-blue-600 mb-2">DEBUG: Chart should render here. Data points: {chartData?.length}</p>
-            <ResponsiveContainer width="100%" height="100%" style={{ border: '2px solid green' }}>
-              {chartType === 'bar' ? (
-              <RechartsBar data={chartData}>
+            <div style={{ width: '100%', height: '450px', border: '2px solid green' }}>
+              <ResponsiveContainer width="100%" height="100%">
+                {chartType === 'bar' ? (
+                <RechartsBar data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
@@ -217,7 +218,7 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
                 )}
               </RechartsBar>
             ) : (
-              <RechartsLine data={chartData}>
+              <RechartsLine data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
@@ -246,6 +247,7 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             )}
           </ResponsiveContainer>
         </div>
+          </div>
         )}
 
         {/* Data Table */}
