@@ -186,10 +186,10 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
           </div>
         ) : (
-          <div className="w-full border-2 border-red-500" style={{ height: '500px', minHeight: '500px' }}>
-            <p className="text-sm text-blue-600 mb-2">DEBUG: Chart should render here. Data points: {chartData?.length}</p>
-            <div style={{ width: '100%', height: '450px', border: '2px solid green' }}>
-              <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full border-2 border-red-500 bg-gray-50" style={{ height: '600px', minHeight: '600px' }}>
+            <p className="text-sm text-blue-600 mb-2 px-4 py-2">DEBUG: Chart should render here. Data points: {chartData?.length}. Move mouse to see tooltip.</p>
+            <div style={{ width: '100%', height: '550px', border: '2px solid green', backgroundColor: '#f0f0f0' }}>
+              <ResponsiveContainer width="100%" height="100%" minHeight={500}>
                 {chartType === 'bar' ? (
                 <RechartsBar data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -200,20 +200,20 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
                   height={100}
                   interval={0}
                 />
-                <YAxis />
+                <YAxis width={80} />
                 <Tooltip />
-                <Legend />
+                <Legend wrapperStyle={{ paddingTop: '20px' }} />
                 {metric === 'totals' ? (
                   <>
-                    <Bar dataKey="Meal Swipes" fill="#3b82f6" />
-                    <Bar dataKey="Flex Dollars" fill="#10b981" />
-                    <Bar dataKey="Total Transactions" fill="#f59e0b" />
-                    <Bar dataKey="Active Students" fill="#8b5cf6" />
+                    <Bar dataKey="Meal Swipes" fill="#FF0000" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Flex Dollars" fill="#00FF00" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Total Transactions" fill="#0000FF" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Active Students" fill="#FFFF00" stroke="#000" strokeWidth={2} />
                   </>
                 ) : (
                   <>
-                    <Bar dataKey="Avg Meals/Student" fill="#3b82f6" />
-                    <Bar dataKey="Avg Flex/Student" fill="#10b981" />
+                    <Bar dataKey="Avg Meals/Student" fill="#FF0000" stroke="#000" strokeWidth={2} />
+                    <Bar dataKey="Avg Flex/Student" fill="#00FF00" stroke="#000" strokeWidth={2} />
                   </>
                 )}
               </RechartsBar>
@@ -227,20 +227,20 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
                   height={100}
                   interval={0}
                 />
-                <YAxis />
+                <YAxis width={80} />
                 <Tooltip />
-                <Legend />
+                <Legend wrapperStyle={{ paddingTop: '20px' }} />
                 {metric === 'totals' ? (
                   <>
-                    <Line type="monotone" dataKey="Meal Swipes" stroke="#3b82f6" strokeWidth={2} />
-                    <Line type="monotone" dataKey="Flex Dollars" stroke="#10b981" strokeWidth={2} />
-                    <Line type="monotone" dataKey="Total Transactions" stroke="#f59e0b" strokeWidth={2} />
-                    <Line type="monotone" dataKey="Active Students" stroke="#8b5cf6" strokeWidth={2} />
+                    <Line type="monotone" dataKey="Meal Swipes" stroke="#FF0000" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Flex Dollars" stroke="#00FF00" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Total Transactions" stroke="#0000FF" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Active Students" stroke="#FFFF00" strokeWidth={4} dot={{ r: 6 }} />
                   </>
                 ) : (
                   <>
-                    <Line type="monotone" dataKey="Avg Meals/Student" stroke="#3b82f6" strokeWidth={2} />
-                    <Line type="monotone" dataKey="Avg Flex/Student" stroke="#10b981" strokeWidth={2} />
+                    <Line type="monotone" dataKey="Avg Meals/Student" stroke="#FF0000" strokeWidth={4} dot={{ r: 6 }} />
+                    <Line type="monotone" dataKey="Avg Flex/Student" stroke="#00FF00" strokeWidth={4} dot={{ r: 6 }} />
                   </>
                 )}
               </RechartsLine>
