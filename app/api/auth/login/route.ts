@@ -4,7 +4,7 @@ import { getSession } from '@/lib/session';
 
 export async function POST(request: Request) {
   try {
-    const { password } = await request.json();
+    const { password } = await request.json() as { password: string };
 
     // Check password against environment variable
     const correctPassword = process.env.DASHBOARD_PASSWORD || 'changeme';

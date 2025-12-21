@@ -23,7 +23,7 @@ export default function LoginPage() {
         body: JSON.stringify({ password }),
       });
 
-      const data = await response.json();
+      const data = await response.json() as { success: boolean; error?: string };
 
       if (data.success) {
         router.push('/');

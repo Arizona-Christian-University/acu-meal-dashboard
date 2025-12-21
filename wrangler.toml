@@ -7,6 +7,11 @@ compatibility_flags = ["nodejs_compat"]
 directory = ".open-next/assets"
 binding = "ASSETS"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "acu-meal-data"
+database_id = "9bf5cddc-593f-424e-91e1-813f2b94e54e"
+
 # Environment variables (these will need to be set via wrangler secret or dashboard)
 # DASHBOARD_PASSWORD
 # SESSION_SECRET

@@ -1,5 +1,5 @@
 import { StudentMember, Transaction, DashboardMetrics, TimeSeriesData, CohortData } from './types';
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, startOfWeek, startOfMonth, differenceInDays } from 'date-fns';
 
 export function calculateDashboardMetrics(
   students: StudentMember[],
@@ -221,4 +221,186 @@ export function getCrosstabAnalysis(
     });
 
   return crosstab;
+}
+
+export interface MonthlyData {
+  month: string;
+  mealSwipes: number;
+  flexDollars: number;
+  transactions: number;
+  uniqueStudents: number;
+  avgMealsPerStudent: number;
+  avgFlexPerStudent: number;
+}
+
+export function getMonthlyAnalysis(
+  mealTransactions: Transaction[],
+  flexTransactions: Transaction[]
+): MonthlyData[] {
+  const monthlyMap: { [key: string]: {
+    mealSwipes: number;
+    flexDollars: number;
+    transactions: number;
+    students: Set<string>;
+  } } = {};
+
+  // Process meal transactions
+  mealTransactions
+    .filter((t) => t['Transaction Type'] !== 'deposit' && t['Transaction Response'] === 'Approved')
+    .forEach((t) => {
+      try {
+        const date = parseISO(t.Date);
+        const monthKey = format(date, 'yyyy-MM');
+
+        if (!monthlyMap[monthKey]) {
+          monthlyMap[monthKey] = {
+            mealSwipes: 0,
+            flexDollars: 0,
+            transactions: 0,
+            students: new Set(),
+          };
+        }
+
+        monthlyMap[monthKey].mealSwipes += 1;
+        monthlyMap[monthKey].transactions += 1;
+        monthlyMap[monthKey].students.add(t['Person Campus ID']);
+      } catch (e) {
+        // Skip invalid dates
+      }
+    });
+
+  // Process flex transactions
+  flexTransactions
+    .filter((t) => t['Transaction Type'] !== 'deposit' && t['Transaction Response'] === 'Approved')
+    .forEach((t) => {
+      try {
+        const date = parseISO(t.Date);
+        const monthKey = format(date, 'yyyy-MM');
+
+        if (!monthlyMap[monthKey]) {
+          monthlyMap[monthKey] = {
+            mealSwipes: 0,
+            flexDollars: 0,
+            transactions: 0,
+            students: new Set(),
+          };
+        }
+
+        monthlyMap[monthKey].flexDollars += Math.abs(parseFloat(t['Net Transaction Amount'] || '0'));
+        monthlyMap[monthKey].transactions += 1;
+        monthlyMap[monthKey].students.add(t['Person Campus ID']);
+      } catch (e) {
+        // Skip invalid dates
+      }
+    });
+
+  return Object.entries(monthlyMap)
+    .map(([month, data]) => ({
+      month: format(parseISO(month + '-01'), 'MMM yyyy'),
+      mealSwipes: data.mealSwipes,
+      flexDollars: data.flexDollars,
+      transactions: data.transactions,
+      uniqueStudents: data.students.size,
+      avgMealsPerStudent: data.students.size > 0 ? data.mealSwipes / data.students.size : 0,
+      avgFlexPerStudent: data.students.size > 0 ? data.flexDollars / data.students.size : 0,
+    }))
+    .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+export interface WeeklyData {
+  week: string;
+  weekNumber: number;
+  mealSwipes: number;
+  flexDollars: number;
+  transactions: number;
+  uniqueStudents: number;
+  avgMealsPerDay: number;
+  avgFlexPerDay: number;
+}
+
+export function getWeeklyAnalysis(
+  mealTransactions: Transaction[],
+  flexTransactions: Transaction[]
+): WeeklyData[] {
+  const weeklyMap: { [key: string]: {
+    weekNum: number;
+    mealSwipes: number;
+    flexDollars: number;
+    transactions: number;
+    students: Set<string>;
+    days: Set<string>;
+  } } = {};
+
+  // Process meal transactions
+  mealTransactions
+    .filter((t) => t['Transaction Type'] !== 'deposit' && t['Transaction Response'] === 'Approved')
+    .forEach((t) => {
+      try {
+        const date = parseISO(t.Date);
+        const weekStart = startOfWeek(date, { weekStartsOn: 1 }); // Monday
+        const weekKey = format(weekStart, 'yyyy-MM-dd');
+        const weekNum = parseInt(t.Week_Number || '0');
+
+        if (!weeklyMap[weekKey]) {
+          weeklyMap[weekKey] = {
+            weekNum,
+            mealSwipes: 0,
+            flexDollars: 0,
+            transactions: 0,
+            students: new Set(),
+            days: new Set(),
+          };
+        }
+
+        weeklyMap[weekKey].mealSwipes += 1;
+        weeklyMap[weekKey].transactions += 1;
+        weeklyMap[weekKey].students.add(t['Person Campus ID']);
+        weeklyMap[weekKey].days.add(format(date, 'yyyy-MM-dd'));
+      } catch (e) {
+        // Skip invalid dates
+      }
+    });
+
+  // Process flex transactions
+  flexTransactions
+    .filter((t) => t['Transaction Type'] !== 'deposit' && t['Transaction Response'] === 'Approved')
+    .forEach((t) => {
+      try {
+        const date = parseISO(t.Date);
+        const weekStart = startOfWeek(date, { weekStartsOn: 1 });
+        const weekKey = format(weekStart, 'yyyy-MM-dd');
+        const weekNum = parseInt(t.Week_Number || '0');
+
+        if (!weeklyMap[weekKey]) {
+          weeklyMap[weekKey] = {
+            weekNum,
+            mealSwipes: 0,
+            flexDollars: 0,
+            transactions: 0,
+            students: new Set(),
+            days: new Set(),
+          };
+        }
+
+        weeklyMap[weekKey].flexDollars += Math.abs(parseFloat(t['Net Transaction Amount'] || '0'));
+        weeklyMap[weekKey].transactions += 1;
+        weeklyMap[weekKey].students.add(t['Person Campus ID']);
+        weeklyMap[weekKey].days.add(format(date, 'yyyy-MM-dd'));
+      } catch (e) {
+        // Skip invalid dates
+      }
+    });
+
+  return Object.entries(weeklyMap)
+    .map(([week, data]) => ({
+      week: `Week ${data.weekNum} (${format(parseISO(week), 'MMM dd')})`,
+      weekNumber: data.weekNum,
+      mealSwipes: data.mealSwipes,
+      flexDollars: data.flexDollars,
+      transactions: data.transactions,
+      uniqueStudents: data.students.size,
+      avgMealsPerDay: data.days.size > 0 ? data.mealSwipes / data.days.size : 0,
+      avgFlexPerDay: data.days.size > 0 ? data.flexDollars / data.days.size : 0,
+    }))
+    .sort((a, b) => a.weekNumber - b.weekNumber);
 }

@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { loadAllData } from '@/lib/dataLoader';
 import {
   calculateDashboardMetrics,
@@ -7,6 +8,8 @@ import {
   getUsageByDayOfWeek,
   getUsageByHour,
   getDeniedTransactions,
+  getMonthlyAnalysis,
+  getWeeklyAnalysis,
 } from '@/lib/analytics';
 
 export const dynamic = 'force-dynamic';
@@ -16,8 +19,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const cohortField = searchParams.get('cohortField') || 'Meal_Plan_Type';
 
-    // Load all data
-    const { students, mealTransactions, flexTransactions, allTransactions } = await loadAllData();
+    // Get D1 database from Cloudflare context
+    const { env } = getCloudflareContext();
+    const db = env.DB;
+    if (!db) {
+      console.error('D1 database not available');
+      throw new Error('D1 database not available');
+    }
+
+    // Load all data from D1 database
+    const { students, mealTransactions, flexTransactions, allTransactions } = await loadAllData(db);
 
     // Calculate metrics
     const metrics = calculateDashboardMetrics(students, mealTransactions, flexTransactions);
@@ -41,6 +52,10 @@ export async function GET(request: Request) {
     // Get denied transactions
     const deniedTransactions = getDeniedTransactions(allTransactions);
 
+    // Get monthly and weekly analysis
+    const monthlyAnalysis = getMonthlyAnalysis(mealTransactions, flexTransactions);
+    const weeklyAnalysis = getWeeklyAnalysis(mealTransactions, flexTransactions);
+
     return NextResponse.json({
       metrics,
       timeSeries: {
@@ -57,6 +72,8 @@ export async function GET(request: Request) {
         count: deniedTransactions.length,
         transactions: deniedTransactions.slice(0, 100), // Limit to first 100
       },
+      monthlyAnalysis,
+      weeklyAnalysis,
     });
   } catch (error) {
     console.error('Error loading dashboard data:', error);

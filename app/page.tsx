@@ -8,6 +8,7 @@ import BarChart from '@/components/charts/BarChart';
 import PieChart from '@/components/charts/PieChart';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import ErrorMessage from '@/components/ErrorMessage';
+import PeriodAnalysis from '@/components/PeriodAnalysis';
 
 interface DashboardData {
   metrics: any;
@@ -15,6 +16,8 @@ interface DashboardData {
   cohortAnalysis: any[];
   usagePatterns: any;
   deniedTransactions: any;
+  monthlyAnalysis: any[];
+  weeklyAnalysis: any[];
 }
 
 export default function DashboardPage() {
@@ -52,7 +55,15 @@ export default function DashboardPage() {
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to fetch dashboard data');
-      const result = await response.json();
+      const result = await response.json() as DashboardData;
+      console.log('[Dashboard] API response:', {
+        hasMonthlyAnalysis: !!result.monthlyAnalysis,
+        monthlyAnalysisLength: result.monthlyAnalysis?.length,
+        hasWeeklyAnalysis: !!result.weeklyAnalysis,
+        weeklyAnalysisLength: result.weeklyAnalysis?.length,
+        sampleMonthly: result.monthlyAnalysis?.[0],
+        sampleWeekly: result.weeklyAnalysis?.[0],
+      });
       setData(result);
       setError(null);
     } catch (err) {
@@ -68,7 +79,7 @@ export default function DashboardPage() {
         credentials: 'include',
       });
       if (!response.ok) throw new Error('Failed to fetch crosstab data');
-      const result = await response.json();
+      const result = await response.json() as any;
       setCrosstabData(result);
     } catch (err) {
       console.error('Error fetching crosstab data:', err);
@@ -184,15 +195,21 @@ export default function DashboardPage() {
             <MetricCard
               title="Meal Swipes"
               value={metrics.totalMealSwipes.toLocaleString()}
-              subtitle={`Avg: ${metrics.averageMealsPerStudent.toFixed(1)} per student`}
+              subtitle={`Avg: ${(metrics.averageMealsPerStudent || 0).toFixed(1)} per student`}
             />
             <MetricCard
               title="Flex Dollars Spent"
               value={`$${metrics.totalFlexDollarsSpent.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
-              subtitle={`Avg: $${metrics.averageFlexPerStudent.toFixed(2)} per student`}
+              subtitle={`Avg: $${(metrics.averageFlexPerStudent || 0).toFixed(2)} per student`}
             />
           </div>
         </section>
+
+        {/* Period Analysis - Monthly and Weekly Views */}
+        <PeriodAnalysis
+          monthlyData={data.monthlyAnalysis}
+          weeklyData={data.weeklyAnalysis}
+        />
 
         {/* Time Series */}
         <section className="mb-8">
