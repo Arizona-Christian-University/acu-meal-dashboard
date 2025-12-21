@@ -186,8 +186,9 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
           </div>
         ) : (
-          <div className="w-full" style={{ height: '400px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="w-full border-2 border-red-500" style={{ height: '400px', minHeight: '400px' }}>
+            <p className="text-sm text-blue-600 mb-2">DEBUG: Chart should render here. Data points: {chartData?.length}</p>
+            <ResponsiveContainer width="100%" height="100%" style={{ border: '2px solid green' }}>
               {chartType === 'bar' ? (
               <RechartsBar data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
