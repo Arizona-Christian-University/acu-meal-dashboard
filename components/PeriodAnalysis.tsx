@@ -211,7 +211,8 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             <div className="mb-2 p-2 bg-yellow-100 text-xs">
               <pre>chartData[0]: {JSON.stringify(chartData?.[0], null, 2)}</pre>
             </div>
-            <ResponsiveContainer width="100%" height={400}>
+            <div style={{ width: '100%', height: '400px' }}>
+            <ResponsiveContainer width="100%" height="100%">
               {chartType === 'bar' ? (
                 <RechartsBar data={chartData} barSize={30}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
@@ -274,6 +275,7 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
               </RechartsLine>
             )}
           </ResponsiveContainer>
+          </div>
           </div>
         )}
 
