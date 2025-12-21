@@ -186,12 +186,11 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
           </div>
         ) : (
-          <div className="w-full border-2 border-red-500 bg-gray-50" style={{ height: '600px', minHeight: '600px' }}>
-            <p className="text-sm text-blue-600 mb-2 px-4 py-2">DEBUG: Chart should render here. Data points: {chartData?.length}. Move mouse to see tooltip.</p>
-            <div style={{ width: '100%', height: '550px', border: '2px solid green', backgroundColor: '#f0f0f0' }}>
-              <ResponsiveContainer width="100%" height="100%" minHeight={500}>
-                {chartType === 'bar' ? (
-                <RechartsBar data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+          <div>
+            <p className="text-sm text-blue-600 mb-2">DEBUG: Rendering chart with {chartData?.length} data points</p>
+            <ResponsiveContainer width="100%" height={400}>
+              {chartType === 'bar' ? (
+                <RechartsBar data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
@@ -218,7 +217,7 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
                 )}
               </RechartsBar>
             ) : (
-              <RechartsLine data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
+              <RechartsLine data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 80 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
                   dataKey="name"
@@ -246,7 +245,6 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
               </RechartsLine>
             )}
           </ResponsiveContainer>
-        </div>
           </div>
         )}
 
