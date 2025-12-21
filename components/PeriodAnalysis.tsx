@@ -208,10 +208,13 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </div>
 
             <h4 className="text-sm font-semibold mb-2">ACTUAL CHART (your data):</h4>
+            <div className="mb-2 p-2 bg-yellow-100 text-xs">
+              <pre>chartData[0]: {JSON.stringify(chartData?.[0], null, 2)}</pre>
+            </div>
             <ResponsiveContainer width="100%" height={400}>
               {chartType === 'bar' ? (
-                <RechartsBar data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
+                <RechartsBar data={chartData} barSize={30}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
                 <XAxis
                   dataKey="name"
                   tick={{ fontSize: 12 }}
@@ -219,20 +222,26 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
                   textAnchor="end"
                   height={80}
                 />
-                <YAxis tick={{ fontSize: 12 }} />
-                <Tooltip />
-                <Legend />
+                <YAxis tick={{ fontSize: 12 }} domain={[0, 'auto']} />
+                <Tooltip
+                  contentStyle={{ backgroundColor: 'white', border: '2px solid black' }}
+                  cursor={{ fill: 'rgba(0,0,0,0.1)' }}
+                />
+                <Legend
+                  wrapperStyle={{ paddingTop: '10px' }}
+                  iconType="square"
+                />
                 {metric === 'totals' ? (
                   <>
-                    <Bar dataKey="Meal Swipes" fill="#FF0000" />
-                    <Bar dataKey="Flex Dollars" fill="#00FF00" />
-                    <Bar dataKey="Total Transactions" fill="#0000FF" />
-                    <Bar dataKey="Active Students" fill="#FFFF00" />
+                    <Bar dataKey="Meal Swipes" fill="#FF0000" minPointSize={5} />
+                    <Bar dataKey="Flex Dollars" fill="#00FF00" minPointSize={5} />
+                    <Bar dataKey="Total Transactions" fill="#0000FF" minPointSize={5} />
+                    <Bar dataKey="Active Students" fill="#FFFF00" minPointSize={5} />
                   </>
                 ) : (
                   <>
-                    <Bar dataKey="Avg Meals/Student" fill="#FF0000" />
-                    <Bar dataKey="Avg Flex/Student" fill="#00FF00" />
+                    <Bar dataKey="Avg Meals/Student" fill="#FF0000" minPointSize={5} />
+                    <Bar dataKey="Avg Flex/Student" fill="#00FF00" minPointSize={5} />
                   </>
                 )}
               </RechartsBar>
