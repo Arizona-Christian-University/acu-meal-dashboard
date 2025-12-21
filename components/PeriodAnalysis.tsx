@@ -87,6 +87,11 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
     console.log('[PeriodAnalysis] chartData sample:', chartData?.[0]);
   }, [period, metric, chartType, chartData]);
 
+  // Check if we have data
+  const hasData = monthlyData?.length > 0 || weeklyData?.length > 0;
+  const currentData = period === 'monthly' ? monthlyData : weeklyData;
+  const hasCurrentData = currentData?.length > 0;
+
   return (
     <section className="mb-8">
       <div className="flex items-center justify-between mb-4">
@@ -171,9 +176,19 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
           {period === 'monthly' ? 'Month' : 'Week'}-by-{period === 'monthly' ? 'Month' : 'Week'} {metric === 'totals' ? 'Totals' : 'Averages'}
         </h3>
 
-        <div className="w-full" style={{ height: '400px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            {chartType === 'bar' ? (
+        {!hasCurrentData ? (
+          <div className="flex items-center justify-center h-96 text-gray-500">
+            <div className="text-center">
+              <p className="text-lg font-medium">No data available</p>
+              <p className="text-sm mt-2">
+                No {period} data found. Try switching to {period === 'monthly' ? 'weekly' : 'monthly'} view.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="w-full" style={{ height: '400px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              {chartType === 'bar' ? (
               <RechartsBar data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis
@@ -230,8 +245,10 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             )}
           </ResponsiveContainer>
         </div>
+        )}
 
         {/* Data Table */}
+        {hasCurrentData && (
         <div className="mt-6 overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
@@ -314,6 +331,7 @@ export default function PeriodAnalysis({ monthlyData, weeklyData }: Props) {
             </tbody>
           </table>
         </div>
+        )}
       </div>
     </section>
   );
